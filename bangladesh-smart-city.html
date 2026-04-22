@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangladesh Smart City Accelerator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #006a4e;
+  --red: #f42a41;
+  --gold: #f4c430;
+  --dark: #060e0c;
+  --darker: #030908;
+  --surface: #0d1f1a;
+  --surface2: #112419;
+  --border: #1e3d30;
+  --text: #e8f5f0;
+  --muted: #7aab95;
+  --white: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+body {
+  background: var(--dark);
+  color: var(--text);
+  font-family: 'Epilogue', sans-serif;
+  overflow-x: hidden;
+}
+
+/* NOISE TEXTURE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.4;
+}
+
+/* ── NAVBAR ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 6vw;
+  background: #060e0ccc;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flag-icon {
+  width: 36px;
+  height: 24px;
+  border-radius: 3px;
+  background: var(--green);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.flag-icon::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  background: var(--red);
+  border-radius: 50%;
+  top: 50%; left: 52%;
+  transform: translate(-50%, -50%);
+}
+
+.nav-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.nav-logo-text span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold); }
+
+.nav-cta {
+  background: var(--green);
+  color: white !important;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+}
+.nav-cta:hover { background: #008060 !important; color: white !important; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 6vw 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, #006a4e18 0%, transparent 70%),
+              radial-gradient(ellipse 40% 40% at 80% 20%, #f42a4108 0%, transparent 60%),
+              radial-gradient(ellipse 40% 40% at 20% 80%, #f4c43008 0%, transparent 60%);
+  z-index: 0;
+}
+
+/* Animated grid lines */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 900px; }
+
+.hero-tag {
+  display: inline-block;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 2px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.hero h1 .highlight {
+  color: var(--gold);
+  position: relative;
+  display: inline-block;
+}
+
+.hero h1 .red-text { color: var(--red); }
+
+.hero p {
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0 auto 40px;
+  line-height: 1.8;
+  font-weight: 300;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-primary:hover { background: #008060; transform: translateY(-2px); }
+
+.btn-outline {
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 14px 32px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+/* Stats bar */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-top: 72px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.stat-item {
+  padding: 20px 40px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  flex: 1;
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--gold);
+  display: block;
+}
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── SECTIONS COMMON ── */
+section { padding: 100px 6vw; }
+
+.section-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-left: 2px solid var(--gold);
+  padding-left: 12px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 300;
+  max-width: 540px;
+  line-height: 1.8;
+  margin-bottom: 56px;
+}
+
+/* ── PROBLEMS SECTION ── */
+.problems { background: var(--surface); }
+
+.problems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2px;
+}
+
+.problem-card {
+  background: var(--darker);
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s;
+  border: 1px solid var(--border);
+}
+.problem-card:hover { transform: translateY(-4px); border-color: var(--green); }
+.problem-card:hover .problem-icon { color: var(--gold); }
+
+.problem-icon {
+  font-size: 2.2rem;
+  margin-bottom: 16px;
+  transition: color 0.2s;
+  display: block;
+}
+
+.problem-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.problem-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.problem-badge {
+  position: absolute;
+  top: 16px; right: 16px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+.badge-critical { background: #f42a4122; color: #f42a41; border: 1px solid #f42a4144; }
+.badge-high { background: #f4c43022; color: #f4c430; border: 1px solid #f4c43044; }
+.badge-medium { background: #006a4e22; color: #4dbb99; border: 1px solid #006a4e44; }
+
+/* ── SOLUTIONS / FOCUS AREAS ── */
+.solutions { background: var(--dark); }
+
+.solutions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.solution-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 24px;
+  transition: border-color 0.2s, transform 0.2s;
+  text-align: center;
+}
+.solution-card:hover { border-color: var(--green); transform: translateY(-3px); }
+
+.sol-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+.sol-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.sol-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+/* ── PROGRAM TIMELINE ── */
+.timeline-section { background: var(--surface); }
+
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--green), var(--gold));
+}
+
+.tl-item {
+  flex: 1;
+  min-width: 130px;
+  text-align: center;
+  padding-top: 60px;
+  position: relative;
+}
+
+.tl-dot {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px; height: 18px;
+  background: var(--gold);
+  border-radius: 50%;
+  border: 3px solid var(--surface);
+  z-index: 1;
+}
+
+.tl-date {
+  font-size: 0.72rem;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.tl-label {
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ── PARTNERS ── */
+.partners-section { background: var(--dark); }
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 2px;
+}
+
+.partner-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  transition: border-color 0.2s, color 0.2s;
+  min-height: 80px;
+}
+.partner-box:hover { border-color: var(--green); color: var(--text); }
+
+/* ── WHY JOIN ── */
+.why-section { background: var(--surface); }
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.why-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color 0.2s;
+}
+.why-card:hover { border-color: var(--gold); }
+
+.why-icon { font-size: 1.6rem; flex-shrink: 0; }
+.why-text {}
+.why-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+.why-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+/* ── CTA ── */
+.cta-section {
+  background: var(--green);
+  text-align: center;
+  padding: 100px 6vw;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, #ffffff10 0%, transparent 70%);
+}
+.cta-section .section-title { color: white; position: relative; z-index: 1; }
+.cta-section p { color: #ffffffaa; max-width: 500px; margin: 0 auto 40px; font-size: 1rem; line-height: 1.8; position: relative; z-index: 1; }
+.btn-white {
+  background: white;
+  color: var(--green);
+  padding: 16px 40px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; z-index: 1;
+  display: inline-block;
+}
+.btn-white:hover { transform: translateY(-3px); box-shadow: 0 12px 40px #00000030; }
+
+/* ── FAQ ── */
+.faq-section { background: var(--dark); }
+.faq-list { max-width: 720px; }
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+  cursor: pointer;
+}
+
+.faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.faq-q span { color: var(--gold); font-size: 1.2rem; transition: transform 0.2s; }
+.faq-item.open .faq-q span { transform: rotate(45deg); }
+
+.faq-a {
+  display: none;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-top: 12px;
+  max-width: 600px;
+}
+.faq-item.open .faq-a { display: block; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--darker);
+  border-top: 1px solid var(--border);
+  padding: 60px 6vw 40px;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+
+.footer-brand p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.8;
+  margin-top: 12px;
+  max-width: 280px;
+}
+
+.footer-col h4 {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.footer-col a {
+  display: block;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--text); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .stats-bar { flex-direction: column; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .timeline::before { display: none; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">
+    <div class="flag-icon"></div>
+    <div class="nav-logo-text">Bangladesh <span>Smart City</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#problems">সমস্যাসমূহ</a></li>
+    <li><a href="#solutions">সমাধান</a></li>
+    <li><a href="#program">প্রোগ্রাম</a></li>
+    <li><a href="#partners">পার্টনার</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact" class="nav-cta">আবেদন করুন</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">🇧🇩 Bangladesh Smart City Accelerator</div>
+    <h1>
+      স্মার্ট সমাধান,<br>
+      <span class="highlight">স্মার্ট বাংলাদেশ</span>
+    </h1>
+    <p>বাংলাদেশের শহরগুলোর দীর্ঘদিনের সমস্যা সমাধানে প্রযুক্তি, উদ্ভাবন এবং তরুণ উদ্যোক্তাদের একত্রিত করছি আমরা — একটি টেকসই ভবিষ্যতের জন্য।</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">আবেদন করুন →</a>
+      <a href="#problems" class="btn-outline">সমস্যাগুলো দেখুন</a>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-num">৫০+</span>
+        <span class="stat-label">স্টার্টআপ নির্বাচিত</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">৮</span>
+        <span class="stat-label">মূল সমস্যা ক্ষেত্র</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">১০০+</span>
+        <span class="stat-label">মেন্টর</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">৳২ কোটি</span>
+        <span class="stat-label">সিড ফান্ডিং</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMS SECTION -->
+<section class="problems reveal" id="problems">
+  <div class="section-tag">চ্যালেঞ্জসমূহ</div>
+  <h2 class="section-title">বাংলাদেশের মূল সমস্যাগুলো</h2>
+  <p class="section-sub">যে সমস্যাগুলো সমাধান না হলে আমাদের শহর স্মার্ট হবে না — আমরা সেগুলোকেই সুযোগে পরিণত করতে চাই।</p>
+
+  <div class="problems-grid">
+
+    <div class="problem-card reveal">
+      <span class="problem-badge badge-critical">জরুরি</span>
+      <span class="problem-icon">🚦</span>
+      <div class="problem-title">যানজট ও ট্র্যাফিক বিশৃঙ্খলা</div>
+      <div class="problem-desc">ঢাকায় গড়ে প্রতিদিন ৩২ লক্ষ কর্মঘণ্টা নষ্ট হয় যানজটে। স্মার্ট ট্র্যাফিক ম্যানেজমেন্ট, রিয়েল-টাইম রুট অপটিমাইজেশন, এবং পাবলিক ট্রান্সপোর্ট ইন্টিগ্রেশন জরুরি।</div>
+    </div>
+
+    <div class="problem-card reveal">
+      <span class="problem-badge badge-critical">জরুরি</span>
+      <span class="problem-icon">💧</span>
+      <div class="problem-title">বন্যা ও জলাবদ্ধতা</div>
+      <div class="problem-desc">প্রতি বর্ষায় ঢাকাসহ সারাদেশে জলাবদ্ধতা লক্ষ লক্ষ মানুষকে ক্ষতিগ্রস্ত করে। স্মার্ট ড্রেনেজ সিস্টেম, আর্লি ওয়ার্নিং টেকনোলজি এবং ফ্লাড ম্যাপিং দরকার।</div>
+    </div>
+
+    <div class="problem-card reveal">
+      <span class="problem-badge badge-critical">জরুরি</span>
+      <span class="problem-icon">🌫️</span>
+      <div class="problem-title">বায়ু দূষণ</div>
+      <div class="problem-desc">ঢাকা বিশ্বের সবচেয়ে দূষিত শহরগুলোর মধ্যে একটি। রিয়েল-টাইম AQI মনিটরিং, শিল্প দূষণ নিয়ন্ত্রণ এবং ইলেকট্রিক পাবলিক ট্রান্সপোর্ট সিস্টেম দরকার।</div>
+    </div>
+
+    <div class="problem-card reveal">
+      <span class="problem-badge badge-high">গুরুত্বপূর্ণ</span>
+      <span class="problem-icon">🗑️</span>
+      <div class="problem-title">বর্জ্য ব্যবস্থাপনা</div>
+      <div class="problem-desc">দেশে প্রতিদিন হাজার হাজার টন বর্জ্য উৎপাদিত হয়, যার বেশিরভাগই অব্যবস্থাপনায় পরিবেশ দূষণ করে। স্মার্ট ওয়েস্ট সর্টিং, রিসাইক্লিং এবং বায়োগ্যাস উৎপাদন সম্ভব।</div>
+    </div>
+
+    <div class="problem-card reveal">
+      <span class="problem-badge badge-high">গুরুত্বপূর্ণ</span>
+      <span class="problem-icon">🏥</span>
+      <div class="problem-title">স্বাস্থ্যসেবার অপ্রাপ্যতা</div>
+      <div class="problem-desc">গ্রামাঞ্চলে মানসম্মত স্বাস্থ্যসেবা পৌঁছায় না। টেলিমেডিসিন, AI ডায়াগনস্টিক্স এবং ডিজিটাল হেলথ রেকর্ড ব্যবস্থা লক্ষ লক্ষ মানুষের জীবন বদলাতে পারে।</div>
+    </div>
+
+    <div class="problem-card reveal">
+      <span class="problem-badge badge-high">গুরুত্বপূর্ণ</span>
+      <span class="problem-icon">⚡</span>
+      <div class="problem-title">বিদ্যুৎ ও এনার্জি সংকট</div>
+      <div class="problem-desc">লোডশেডিং এবং অপ্রচলিত জ্বালানির উপর নির্ভরতা অর্থনীতিকে পিছিয়ে রাখছে। সোলার মাইক্রোগ্রিড, স্মার্ট মিটারিং এবং এনার্জি স্টোরেজ সমাধান জরুরি।</div>
+    </div>
+
+    <div class="problem-card reveal">
+      <span class="problem-badge badge-medium">মাঝারি</span>
+      <span class="problem-icon">🏫</span>
+      <div class="problem-title">শিক্ষার মানবৈষম্য</div>
+      <div class="problem-desc">শহর ও গ্রামের মধ্যে শিক্ষার মানে বিশাল পার্থক্য। ডিজিটাল লার্নিং প্ল্যাটফর্ম, AI-টিউটর এবং কানেক্টেড ক্লাসরুম এই বৈষম্য কমাতে পারে।</div>
+    </div>
+
+    <div class="problem-card reveal">
+      <span class="problem-badge badge-medium">মাঝারি</span>
+      <span class="problem-icon">🏗️</span>
+      <div class="problem-title">অপরিকল্পিত নগরায়ন</div>
+      <div class="problem-desc">অনিয়ন্ত্রিত নির্মাণ ও অবকাঠামো উন্নয়নের অভাবে শহরের বাসযোগ্যতা কমছে। স্মার্ট আর্বান প্ল্যানিং ও ডিজিটাল টুইন প্রযুক্তি এর সমাধান দিতে পারে।</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section class="solutions reveal" id="solutions">
+  <div class="section-tag">সমাধান ক্ষেত্র</div>
+  <h2 class="section-title">আমাদের ফোকাস এরিয়া</h2>
+  <p class="section-sub">প্রযুক্তি ও উদ্ভাবনের মাধ্যমে আমরা যে ক্ষেত্রগুলোতে কাজ করছি।</p>
+
+  <div class="solutions-grid">
+    <div class="solution-card reveal">
+      <span class="sol-icon">🌐</span>
+      <div class="sol-title">IoT ও কানেক্টিভিটি</div>
+      <div class="sol-desc">স্মার্ট সেন্সর নেটওয়ার্ক দিয়ে শহরকে সংযুক্ত করা</div>
+    </div>
+    <div class="solution-card reveal">
+      <span class="sol-icon">🤖</span>
+      <div class="sol-title">কৃত্রিম বুদ্ধিমত্তা</div>
+      <div class="sol-desc">AI দিয়ে শহরের সমস্যাগুলোর পূর্বানুমান ও সমাধান</div>
+    </div>
+    <div class="solution-card reveal">
+      <span class="sol-icon">🌱</span>
+      <div class="sol-title">সবুজ শহর</div>
+      <div class="sol-desc">পরিবেশবান্ধব প্রযুক্তি ও নবায়নযোগ্য শক্তি</div>
+    </div>
+    <div class="solution-card reveal">
+      <span class="sol-icon">🏛️</span>
+      <div class="sol-title">স্মার্ট গভর্নেন্স</div>
+      <div class="sol-desc">ডিজিটাল সরকারি সেবা ও স্বচ্ছতা নিশ্চিতকরণ</div>
+    </div>
+    <div class="solution-card reveal">
+      <span class="sol-icon">🚌</span>
+      <div class="sol-title">স্মার্ট মোবিলিটি</div>
+      <div class="sol-desc">পাবলিক ট্রান্সপোর্ট অটোমেশন ও ট্র্যাফিক ম্যানেজমেন্ট</div>
+    </div>
+    <div class="solution-card reveal">
+      <span class="sol-icon">📊</span>
+      <div class="sol-title">ওপেন ডেটা</div>
+      <div class="sol-desc">সিটি ডেটা উন্মুক্ত করে নতুন সমাধান তৈরির সুযোগ</div>
+    </div>
+    <div class="solution-card reveal">
+      <span class="sol-icon">🔒</span>
+      <div class="sol-title">সাইবার নিরাপত্তা</div>
+      <div class="sol-desc">ডিজিটাল অবকাঠামোর সুরক্ষা ও ডেটা নিরাপত্তা</div>
+    </div>
+    <div class="solution-card reveal">
+      <span class="sol-icon">🛒</span>
+      <div class="sol-title">স্মার্ট কমার্স</div>
+      <div class="sol-desc">ডিজিটাল পেমেন্ট, ই-কমার্স ও ফিনটেক সমাধান</div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline-section reveal" id="program">
+  <div class="section-tag">প্রোগ্রাম</div>
+  <h2 class="section-title">প্রোগ্রামের সময়সূচি</h2>
+  <p class="section-sub">৩ মাসের নিবিড় অ্যাক্সিলেরেটর প্রোগ্রাম।</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">সেপ্টেম্বর ১</div>
+      <div class="tl-label">আবেদন শুরু</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">অক্টোবর ৩১</div>
+      <div class="tl-label">আবেদনের শেষ তারিখ</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">নভেম্বর ১৫</div>
+      <div class="tl-label">বাছাই দিবস</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">জানুয়ারি ১</div>
+      <div class="tl-label">প্রোগ্রাম শুরু</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">মার্চ ৩১</div>
+      <div class="tl-label">ডেমো ডে 🎉</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY JOIN -->
+<section class="why-section reveal">
+  <div class="section-tag">কেন যোগ দেবেন</div>
+  <h2 class="section-title">প্রোগ্রামের সুবিধাসমূহ</h2>
+  <p class="section-sub">নির্বাচিত স্টার্টআপগুলো যা পাবে।</p>
+
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon">💰</div>
+      <div class="why-text">
+        <div class="why-title">সিড ফান্ডিং</div>
+        <div class="why-desc">প্রতিটি স্টার্টআপ প্রাথমিক ফান্ডিং পাবে প্রোটোটাইপ তৈরির জন্য।</div>
+      </div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🧑‍🏫</div>
+      <div class="why-text">
+        <div class="why-title">১০০+ মেন্টর</div>
+        <div class="why-desc">দেশ-বিদেশের অভিজ্ঞ উদ্যোক্তা ও ইন্ডাস্ট্রি এক্সপার্টদের গাইডেন্স।</div>
+      </div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🏢</div>
+      <div class="why-text">
+        <div class="why-title">কো-ওয়ার্কিং স্পেস</div>
+        <div class="why-desc">ঢাকায় আধুনিক অফিস স্পেস ও ইন্টারনেট সুবিধা বিনামূল্যে।</div>
+      </div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🌐</div>
+      <div class="why-text">
+        <div class="why-title">গ্লোবাল নেটওয়ার্ক</div>
+        <div class="why-desc">আন্তর্জাতিক বিনিয়োগকারী ও কর্পোরেট পার্টনারদের সাথে সংযোগ।</div>
+      </div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">📋</div>
+      <div class="why-text">
+        <div class="why-title">মাস্টারক্লাস</div>
+        <div class="why-desc">প্রোডাক্ট, মার্কেটিং, ফান্ডরেইজিং সহ বিভিন্ন বিষয়ে সাপ্তাহিক ওয়ার্কশপ।</div>
+      </div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🚀</div>
+      <div class="why-text">
+        <div class="why-title">ডেমো ডে</div>
+        <div class="why-desc">সরকারি ও বেসরকারি বিনিয়োগকারীদের সামনে পিচ করার সুযোগ।</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="partners-section reveal" id="partners">
+  <div class="section-tag">পার্টনার</div>
+  <h2 class="section-title">আমাদের পার্টনারসমূহ</h2>
+  <p class="section-sub">সরকারি ও বেসরকারি প্রতিষ্ঠান একসাথে কাজ করছে।</p>
+  <div class="partners-grid">
+    <div class="partner-box">ICT বিভাগ, বাংলাদেশ</div>
+    <div class="partner-box">a2i প্রোগ্রাম</div>
+    <div class="partner-box">ঢাকা উত্তর সিটি কর্পোরেশন</div>
+    <div class="partner-box">BIDA</div>
+    <div class="partner-box">Grameenphone</div>
+    <div class="partner-box">bKash</div>
+    <div class="partner-box">BUET</div>
+    <div class="partner-box">BASIS</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal" id="contact">
+  <h2 class="section-title">আজই আবেদন করুন</h2>
+  <p>তোমার স্মার্ট সিটি আইডিয়া কি বাংলাদেশ বদলে দিতে পারে? আমরা তোমার জন্য অপেক্ষা করছি।</p>
+  <a href="mailto:info@bangladeshsmartcity.org" class="btn-white">আবেদন পাঠান →</a>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section reveal" id="faq">
+  <div class="section-tag">সাধারণ প্রশ্ন</div>
+  <h2 class="section-title">FAQ</h2>
+  <p class="section-sub">কোনো প্রশ্ন না পেলে সরাসরি ইমেইল করুন।</p>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">কে আবেদন করতে পারবে? <span>+</span></div>
+      <div class="faq-a">বাংলাদেশি যেকোনো স্টার্টআপ বা টিম যাদের একটি স্মার্ট সিটি সমস্যা সমাধানের আইডিয়া বা প্রোটোটাইপ আছে, তারা আবেদন করতে পারবে। আর্লি স্টেজ থেকে গ্রোথ স্টেজ পর্যন্ত সবার জন্য উন্মুক্ত।</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">প্রোগ্রামটি কতদিনের? <span>+</span></div>
+      <div class="faq-a">৩ মাসের নিবিড় অ্যাক্সিলেরেটর প্রোগ্রাম। ঢাকায় কো-ওয়ার্কিং স্পেসে সপ্তাহে ৫ দিন কাজ করতে হবে।</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">কতটি স্টার্টআপ নির্বাচিত হবে? <span>+</span></div>
+      <div class="faq-a">প্রতিটি কোহর্টে ১০টি স্টার্টআপ নির্বাচিত হবে। বাছাই প্রক্রিয়ায় পিচ সেশন ও ইন্টারভিউ অন্তর্ভুক্ত।</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">কী ধরনের ফান্ডিং পাওয়া যাবে? <span>+</span></div>
+      <div class="faq-a">নির্বাচিত স্টার্টআপগুলো প্রাথমিক সিড ফান্ডিং, কো-ওয়ার্কিং স্পেস এবং মেন্টরশিপ পাবে। ডেমো ডেতে আরও বড় বিনিয়োগের সুযোগ থাকে।</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">আবেদন কীভাবে করব? <span>+</span></div>
+      <div class="faq-a">উপরের "আবেদন পাঠান" বাটনে ক্লিক করে আমাদের ইমেইলে তোমার আইডিয়া ও টিমের তথ্য পাঠাও। আমরা ৭ কার্যদিবসের মধ্যে যোগাযোগ করব।</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <div class="flag-icon"></div>
+        <div class="nav-logo-text">Bangladesh <span>Smart City</span></div>
+      </div>
+      <p>বাংলাদেশের শহরগুলোকে প্রযুক্তির মাধ্যমে আরও বাসযোগ্য, টেকসই ও স্মার্ট করার লক্ষ্যে কাজ করছি আমরা।</p>
+    </div>
+    <div class="footer-col">
+      <h4>প্রোগ্রাম</h4>
+      <a href="#problems">সমস্যাসমূহ</a>
+      <a href="#solutions">সমাধান</a>
+      <a href="#program">সময়সূচি</a>
+      <a href="#partners">পার্টনার</a>
+    </div>
+    <div class="footer-col">
+      <h4>রিসোর্স</h4>
+      <a href="#">আবেদন গাইড</a>
+      <a href="#">মেন্টর হন</a>
+      <a href="#">পার্টনার হন</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4>যোগাযোগ</h4>
+      <a href="mailto:info@bangladeshsmartcity.org">ইমেইল করুন</a>
+      <a href="#">ফেসবুক</a>
+      <a href="#">লিংকডইন</a>
+      <a href="#">টুইটার</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© ২০২৫ Bangladesh Smart City Accelerator. সর্বস্বত্ব সংরক্ষিত।</span>
+    <span>🇧🇩 Made with ❤️ for Bangladesh</span>
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 60);
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => observer.observe(el));
+
+// FAQ toggle
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    item.classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>
